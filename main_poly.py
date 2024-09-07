@@ -62,7 +62,7 @@ def gen_polynomial(spin_S):
         value_list = [sp.symbols('a')]
     value_list.insert(0, 1)
     coeff_dict = dict(zip(key_list, value_list))
-    
+
     # mother diagram dict: construct unique diagrams
     key_cartesian_product = list(itertools.product(key_list, key_list))
     mother_dict = {}
@@ -97,9 +97,13 @@ def gen_polynomial(spin_S):
     for power, coeff in polynomial_dict.items():
         polynomial += x**power * coeff
 
+    # construct remainder polynomial
+    remainder_poly_dict = gen_remainder(values_list, polynomial_dict)
+
+
     return sp.Poly(polynomial, x)
 
-def print_polynomial(polynomial):
+def gen_poly_dict(polynomial):
     """
     Prints the terms and coefficients of a SymPy polynomial and returns a dictionary of these terms.
 
@@ -128,9 +132,23 @@ def print_polynomial(polynomial):
 
     terms = polynomial.terms()
     coeff_dict = {term[0][0]: term[1] for term in terms}
-    for key, coeff in coeff_dict.items():
-        print(f"{key}: {coeff}")
     return coeff_dict
+
+def gen_remainder(values_list, sp_poly):
+    coeff_dict = gen_poly_dict(sp_poly)
+    remainder_dict = {}
+    for key, coeff in coeff_dict.items():
+        terms = coeff.args
+        for term in terms:
+           if term not in values_list:
+               if key in remainder_dict:
+                   remainder_dict[key] += term
+              else:
+                   remainder_dict[key] = term
+
+
+    return remainder_dict
+
 
 def factorize_polynomial(polynomial):
     """
