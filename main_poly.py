@@ -115,8 +115,8 @@ def gen_remainder_poly(value_list, poly_A_dict):
     
     remainder_dict = {}
     for key, coeff in poly_A_dict.items():
-        print(coeff)
-        print(coeff.args)
+        if coeff == 1:
+            continue
         for term in coeff.args:
            if term not in value_list:
                if key in remainder_dict:
