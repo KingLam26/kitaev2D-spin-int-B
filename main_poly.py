@@ -115,14 +115,21 @@ def gen_remainder_poly(value_list, poly_A_dict):
     
     remainder_dict = {}
     for key, coeff in poly_A_dict.items():
-        if coeff == 1:
-            continue
-        for term in coeff.args:
-           if term not in value_list:
-               if key in remainder_dict:
-                   remainder_dict[key] += term
-               else:
-                   remainder_dict[key] = term
+        if coeff == 1: continue
+        for term in coeff.as_ordered_terms():
+            if "-" in str(term):
+                if -term not in value_list and term / -2 not in value_list:
+                    if key in remainder_dict:
+                        remainder_dict[key] += term
+                    else:
+                        remainder_dict[key] = term
+            else:
+                if term not in value_list and term / 2 not in value_list:
+                    if key in remainder_dict:
+                        remainder_dict[key] += term
+                    else:
+                        remainder_dict[key] = term
+
 
     return remainder_dict
 
@@ -193,7 +200,6 @@ poly_A, poly_B = gen_poly(spin_S)
 coeff_dict_poly_A, coeff_dict_poly_B = gen_poly_dict(poly_A), gen_poly_dict(poly_B)
 
 factor_poly_A, factor_poly_B = factorize_poly(poly_A), factorize_poly(poly_B)
-coeff_dict_factor_poly_A, coeff_dict_factor_poly_B = gen_poly_dict(factor_poly_A), gen_poly_dict(factor_poly_B)
 
 def print_poly_dict(poly_dict):
     for key, value in coeff_dict_poly_A:
