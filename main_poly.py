@@ -14,7 +14,7 @@ def gen_poly(spin_S):
 
     """
     Generates two polynomials:
-        1. Poly A represents the sum of all coefficients of all possible diagrams 
+        1. Poly A represents the sum of all coefficients of all possible diagrams
            based on the input parameter spin_S under the no-offset assumption.
         2. Poly B represents the remainder polynomial that needs to be added to Poly A
            to ensure the correct overall polynomial is obtained when plus-offset is switched on.
@@ -133,37 +133,12 @@ def gen_remainder_poly(value_list, poly_A_dict):
 
     return remainder_dict
 
-
-def gen_poly_dict(polynomial):
-    """
-    Prints the terms and coefficients of a SymPy polynomial and returns a dictionary of these terms.
-
-    Parameters:
-    polynomial (sympy.Poly): A SymPy polynomial object to be printed and analyzed.
-
-    Returns:
-    dict: A dictionary where keys are the powers of the polynomial and values are the corresponding coefficients.
-
-    Description:
-    - Extracts terms and coefficients from the given polynomial.
-    - Creates a dictionary with the power of the term as the key and the coefficient as the value.
-    - Prints each power and its associated coefficient.
-    - Returns the dictionary for further use.
-
-    Example:
-    >>> poly = Poly(x**4 - 2*a*x**3 + (a**2 + 2)*x**2 - 2*a*x + 1, x, domain='ZZ[a]')
-    >>> print_polynomial(poly)
-            4: 1
-            3: -2*a
-            2: a**2 + 2
-            1: -2*a
-            0: 1
-            {4: 1, 3: -2*a, 2: a**2 + 2, 1: -2*a, 0: 1}
-    """
-
-    terms = polynomial.terms()
-    coeff_dict = {term[0][0]: term[1] for term in terms}
-    return coeff_dict
+def diff_poly(polynomial):
+    
+    # differentiate the polynomial
+    derivative = sp.diff(polynomial, sp.symbols("x"))
+    
+    return derivative
 
 def factorize_poly(polynomial):
     """
@@ -195,18 +170,84 @@ def factorize_poly(polynomial):
     
     return factored_poly
 
-# Generate the polynomials: poly A and poly B
-poly_A, poly_B = gen_poly(spin_S)
-coeff_dict_poly_A, coeff_dict_poly_B = gen_poly_dict(poly_A), gen_poly_dict(poly_B)
+def gen_poly_dict(polynomial):
+    """
+    Prints the terms and coefficients of a SymPy polynomial and returns a dictionary of these terms.
 
-factor_poly_A, factor_poly_B = factorize_poly(poly_A), factorize_poly(poly_B)
+    Parameters:
+    polynomial (sympy.Poly): A SymPy polynomial object to be printed and analyzed.
+
+    Returns:
+    dict: A dictionary where keys are the powers of the polynomial and values are the corresponding coefficients.
+
+    Description:
+    - Extracts terms and coefficients from the given polynomial.
+    - Creates a dictionary with the power of the term as the key and the coefficient as the value.
+    - Prints each power and its associated coefficient.
+    - Returns the dictionary for further use.
+
+    Example:
+    >>> poly = Poly(x**4 - 2*a*x**3 + (a**2 + 2)*x**2 - 2*a*x + 1, x, domain='ZZ[a]')
+    """
+
+    terms = polynomial.terms()
+    coeff_dict = {term[0][0]: term[1] for term in terms}
+    return coeff_dict
 
 def print_poly_dict(poly_dict):
-    for key, value in coeff_dict_poly_A:
+    for key, value in poly_dict.items():
         print(f"{key}: {value}")
 
-# Print the factored polynomial
-sp.pprint(poly_A, use_unicode=True)
+
+##### computation #####
+
+# Generate the polynomials: poly A and poly B
+poly_A, poly_B = gen_poly(spin_S)
+dict_poly_A, dict_poly_B = gen_poly_dict(poly_A), gen_poly_dict(poly_B)
+
+"""
+# differentiate
+first_diff_poly_A = diff_poly(poly_A)
+second_diff_poly_A = diff_poly(first_diff_poly_A)
+
+first_diff_dict_poly_A = gen_poly_dict(first_diff_poly_A)
+second_diff_dict_poly_A = gen_poly_dict(second_diff_poly_A)
+
+print_poly_dict(dict_poly_A)
+print_poly_dict(first_diff_dict_poly_A)
+print_poly_dict(second_diff_dict_poly_A)
+"""
+
+# divide by (x-1) if S is odd
+x = sp.symbols('x')
+if spin_S % 2 != 0:
+    denom = x**2 + 1 - 2*x
+    quo_poly_A, _ = sp.div(poly_A.as_expr(), denom, domain = "QQ")
+    quo_poly_A = sp.Poly(quo_poly_A, x)
+else:
+    quo_poly_A = poly_A
+
+print_poly_dict(gen_poly_dict(poly_A))
+print()
+print_poly_dict(gen_poly_dict(quo_poly_A))
+
+# factorize
+factor_poly_A = factorize_poly(quo_poly_A)
+
+
+factors_list = sp.factor_list(quo_poly_A)
+print()
+print_poly_dict(gen_poly_dict(factors_list[1][0][0]))
+quit()
+
+# Extract and print the repeated factor
+for factor, exponent in factors[1]:
+    if exponent == 2:
+        print("Repeated factor:", factor**exponent)
+
+# Printing
 sp.pprint(factor_poly_A, use_unicode=True)
+"""
 sp.pprint(poly_B, use_unicode=True)
 sp.pprint(factor_poly_B, use_unicode=True)
+"""
