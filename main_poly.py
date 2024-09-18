@@ -1,8 +1,8 @@
 from utils_poly import *
 
 diff_print = False
-poly_print_A, poly_print_B = True, True
-quo_A_print, quo_B_print = True, True
+poly_print_A, poly_print_B = False,False
+quo_A_print, quo_B_print = False,True
 factor_A_print, factor_B_print = True, True
 
 
@@ -55,7 +55,7 @@ if quo_A_print:
     print(f"\nPoly A quotient: \n")
     print_poly_dict(gen_poly_dict(quo_poly_A))
 
-# Divide Poly B by x**2 always, and (x-1)**2 if S odd
+# Divide Poly B by x**2 always, and also (x-1)**2 if S odd
 if spin_S % 2 != 0:
     denom_B = x**2 * (x-1)**2
 else:
@@ -69,7 +69,7 @@ if remain_poly_B != 0:
 if quo_B_print:
     print(f"\nPoly B quotient: \n")
     print_poly_dict(gen_poly_dict(quo_poly_B))
-
+quit()
 # factorize Poly A
 factors_A_list = sp.factor_list(quo_poly_A)
 if factor_A_print:

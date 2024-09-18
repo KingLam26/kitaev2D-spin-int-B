@@ -111,17 +111,15 @@ def gen_remainder_poly(value_list, poly_A_dict):
         if coeff == 1: continue
         for term in coeff.as_ordered_terms():
             if "-" in str(term):
-                if -term not in value_list and term / -2 not in value_list:
-                    if key in remainder_dict:
-                        remainder_dict[key] += term
-                    else:
-                        remainder_dict[key] = term
+                test_term = -term
             else:
-                if term not in value_list and term / 2 not in value_list:
-                    if key in remainder_dict:
-                        remainder_dict[key] += term
-                    else:
-                        remainder_dict[key] = term
+                test_term = term
+            
+            if test_term not in value_list and test_term / 2 not in value_list:
+                if key in remainder_dict:
+                    remainder_dict[key] += term
+                else:
+                    remainder_dict[key] = term
 
 
     return remainder_dict
