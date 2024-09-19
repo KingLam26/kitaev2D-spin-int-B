@@ -1,8 +1,8 @@
 from utils_poly import *
 
 diff_print = False
-poly_print_A, poly_print_B = False,False
-quo_A_print, quo_B_print = False,True
+poly_print_A, poly_print_B = True, True
+quo_A_print, quo_B_print = True, True
 factor_A_print, factor_B_print = True, True
 
 
@@ -69,7 +69,7 @@ if remain_poly_B != 0:
 if quo_B_print:
     print(f"\nPoly B quotient: \n")
     print_poly_dict(gen_poly_dict(quo_poly_B))
-quit()
+
 # factorize Poly A
 factors_A_list = sp.factor_list(quo_poly_A)
 if factor_A_print:
