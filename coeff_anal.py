@@ -37,6 +37,8 @@ e2_e1 = e2/e1
 e2_e12 = e2/e12
 print(f"e12_e1: {e12_e1} e2_e12: {e2_e12}")
 
+f11 = e2_e12 - e12_e1
+print(f"f11: {f11}")
 
 ##### spin 2 #####
 print("\nspin 2\n")
