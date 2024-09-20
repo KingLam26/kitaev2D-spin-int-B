@@ -50,7 +50,17 @@ e_a1b1 = e_ab / e_aa
 e_b1b1 = e_bb / e_aa
 print(f"e_a1b1: {e_a1b1} e_b1b1: {e_b1b1}")
 
+delta = (e_b1b1/e_a1b1) - e_a1b1
+print(f"delta: {delta}")
 
-print(f"f11: {f11}")
 
+from sympy import symbols
 
+# Define variables with subscripts
+a = symbols('a0:3')
+x = symbols('x')
+
+poly = x*a[0]
+
+# Print the variables
+print(poly)
