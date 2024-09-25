@@ -1,26 +1,38 @@
+import sys
 import sympy as sp
 
-# Define the variables
-x, z, a, b, c = sp.symbols('x z a b c')
-
-# Define the polynomial
-
+# Define all variables
+z = sp.symbols('z')
 a1, a2, a3 = sp.symbols('a1 a2 a3')
-poly_4 = x**4 - 2*a1*x**3 + (2+a1**2)*x**2 -2*a1*x + 1
+b1, b2, b3 = sp.symbols('b1 b2 b3')
+c1, c2, c3 = sp.symbols('c1 c2 c3')
 
+# Define palindromal polynomial coefficients
+poly_coeff_dict = {4: [1, -2*a1, 2+a1**2], 
+				   6: [1, -2*a1, 2*a2 + a1**2, -(2*a1+2*a1*a2), 2+2*a1**2+a2**2],
+				   8: [1, -2*a1, 2*a2 + a1**2, -(2*a3+2*a1*a2), 2*a2+2*a1*a3+a2**2, -(2*a1+2*a1*a2+2*a2*a3), 2+2*a1**2+2*a2**2+a3**2],
+				   5: [1, -(2*a1+2), 3+a1**2-2*a1],
+				   7: [1, -(2*a1-2), 3-4*a1+2*a2+a1**2, -(-4+6*a1-2*a2-2*a1**2+2*a1*a2), 5-6*a1+2*a2+3*a1**2-2*a1*a2+a2**2],
+				   1.5: [a2**2, -(2*a2 + 2*a1*a2**2), 1+a1**2*a2**2+2*a1*a2+2*a2**2]
+				   }
 
+# Generate palindromal polynomial
+def gen_PP(poly_coeff_list, spin):
+	poly = 0
+	count = len(poly_coeff_list)
+	deg = (count-1) * 2
+	for i in range(count):
+		if i*2 != deg:
+			poly += poly_coeff_list[i] * z**i + poly_coeff_list[i] * z**(deg-i)
+		else:
+			poly += poly_coeff_list[i] * z**i
+	return poly
 
-poly_6 = z**8 - 2*a1*z**7 + (2*a2 + a1**2)*z**6 - (2*a1 + 2*a1*a2)*z**5 + (2 + 2*a1**2 + a2**2)*z**4 - (2*a1 + 2*a1*a2)*z**3 + (2*a2 + a1**2)*z**2 - 2*a1*z + 1
+# Factor palindromal polynomial
+if len(sys.argv) > 1:
+	spin = float(sys.argv[1]) if '.' in sys.argv[1] else int(sys.argv[1])
 
-poly_8 = z**12 - 2*a*z**11 + (2*b+a**2)*z**10 - (2*c+2*a*b)*z**9 + (2*b+b**2+2*a*c)*z**8 - (2*a+2*a*b+2*b*c)*z**7 + (2+2*a**2+2*b**2+c**2)*z**6
-poly_8 += 1 - 2*a*z**1 + (2*b+a**2)*z**2 - (2*c+2*a*b)*z**3 + (2*b+b**2+2*a*c)*z**4 - (2*a+2*a*b+2*b*c)*z**5
-
-# Factorize the polynomial
-poly_4_factor = sp.factor(poly_4)
-poly_6_factor = sp.factor(poly_6)
-poly_8_factor = sp.factor(poly_8)
-
-# Display the factorized form
-print(poly_4_factor)
-print(poly_6_factor)
-print(poly_8_factor)
+poly = gen_PP(poly_coeff_dict[spin], spin)
+poly_factor = sp.factor(poly)
+print(poly_factor)
+quit()
