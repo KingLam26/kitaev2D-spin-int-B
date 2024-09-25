@@ -1,3 +1,5 @@
 # Ignore all __pycache__ directories
 __pycache__/
 .DS_Store
+._coeff_anal.py
+._quick_factor.py
