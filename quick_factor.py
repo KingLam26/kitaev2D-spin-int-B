@@ -35,4 +35,3 @@ if len(sys.argv) > 1:
 poly = gen_PP(poly_coeff_dict[spin], spin)
 poly_factor = sp.factor(poly)
 print(poly_factor)
-quit()

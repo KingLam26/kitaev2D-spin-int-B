@@ -81,5 +81,3 @@ factors_B_list = sp.factor_list(quo_poly_B)
 if factor_B_print:
     print(f"\nPoly B factor: \n")
     print_poly_dict(gen_poly_dict(factors_B_list[1][0][0]))
-
-quit()

@@ -188,5 +188,3 @@ def gen_poly_dict(polynomial):
 def print_poly_dict(poly_dict):
     for key, value in poly_dict.items():
         print(f"{key}: {value}")
-
-
